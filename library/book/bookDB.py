@@ -51,9 +51,12 @@ def addBook(title, author, pages, checkinBook, conn_string=conn_string) -> Dict:
     except:
         result['result'] = False
         result['message'] = f"Livro '{title}' não pode ser adicionado a lista de leitura"
-
+    
+    result['service'] = 1
     return result
     
+# abandonar leitura consiste em simplesmente apagar o livro da lista
+# uma leitura é abandonada quando não se quer mais ler aquele livro
 def leaveReading(title, conn_string=conn_string) -> Dict:
     
     conn = psycopg2.connect(conn_string)
@@ -72,6 +75,7 @@ def leaveReading(title, conn_string=conn_string) -> Dict:
         conn.close()
         result['result'] = True
         result['message'] = f"Livro '{title}' abandonado"
+        result['service'] = 2
         return result
     else:
         print(f"Livro '{title}' não encontrado")
@@ -80,8 +84,28 @@ def leaveReading(title, conn_string=conn_string) -> Dict:
     cursor.close()
     conn.close()
     result['result'] = False
+    result['service'] = 2
+    return result
+
+# visualizar a os livros e suas situações na lista de leitura
+def seeList(conn_string=conn_string):
+    conn = psycopg2.connect(conn_string)
+    cursor = conn.cursor()
+
+    print('Visualizar lista de leituras')
+    banco = []
+    cursor.execute(f"SELECT * FROM reading_list;")
+    for t in cursor:
+        banco.append(t)
+    result = {
+        "result": banco,
+        "service": 3
+    }
+    cursor.close()
+    conn.close()
     return result
     
 
 # title = input('Title (del): ')
 # leaveReading(title=title, conn_string=conn_string)
+# seeList()

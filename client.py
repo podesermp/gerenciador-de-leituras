@@ -1,6 +1,6 @@
 from socket import *
 from library.serialização.serializador import deserializer, serializer
-from library.user.user import userAddReading, userDefineSevice
+from library.user.user import userDefineSevice, userShowMessage
 
 
 serverName = 'localhost'
@@ -16,6 +16,7 @@ clientSocket.sendto(message_json.encode(), (serverName, serverPort))
 answerMessage, serverAddress = clientSocket.recvfrom(2048)
 response = deserializer(message=answerMessage)
 
-print(f"\n{response['message']}")
+userShowMessage(message=response)
+# print(f"\n{response}")
 
 clientSocket.close()

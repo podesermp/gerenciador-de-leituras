@@ -12,4 +12,7 @@ def forwarding(message):
         result = bookDB.leaveReading(
                 title=message['title']
             )
+    elif message['service'] == 3:
+        result = bookDB.seeList()
+
     return result
