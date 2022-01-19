@@ -1,4 +1,3 @@
-from email import message
 from socket import *
 from library.serialização.serializador import deserializer, serializer
 from library.user.user import userAddReading, userDefineSevice
@@ -17,10 +16,6 @@ clientSocket.sendto(message_json.encode(), (serverName, serverPort))
 answerMessage, serverAddress = clientSocket.recvfrom(2048)
 response = deserializer(message=answerMessage)
 
-if response['result'] :
-    print(f"\nserver - alteração em '{response['title']}' realizada com sucesso")
-else:
-    print('Livro não pode ser modificado')
-# print(f"\nserver - {answerMessage}")
+print(f"\n{response['message']}")
 
 clientSocket.close()
