@@ -15,4 +15,10 @@ def forwarding(message):
     elif message['service'] == 3:
         result = bookDB.seeList()
 
+    elif message['service'] == 4:
+        result = bookDB.finishReading(
+            title=message['objeto']['title'],
+            rating=message['objeto']['rating'],
+            checkoutbook=message['objeto']['checkoutBook']
+        )
     return result

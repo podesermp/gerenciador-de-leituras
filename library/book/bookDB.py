@@ -1,5 +1,4 @@
-from typing import Dict
-from unittest import result
+from datetime import datetime
 import psycopg2
 
 #config
@@ -34,7 +33,7 @@ def connectBD(conn_string=conn_string):
 
 # adiciona um livro na lista de leitura
 # essa função corresponde a addNewReading(book:Book, list: int): boolean
-def addBook(title, author, pages, checkinBook, conn_string=conn_string) -> Dict:
+def addBook(title:str, author:str, pages:int, checkinBook:str, conn_string=conn_string) -> dict:
     
     result  = {}
     try:
@@ -57,7 +56,7 @@ def addBook(title, author, pages, checkinBook, conn_string=conn_string) -> Dict:
     
 # abandonar leitura consiste em simplesmente apagar o livro da lista
 # uma leitura é abandonada quando não se quer mais ler aquele livro
-def leaveReading(title, conn_string=conn_string) -> Dict:
+def leaveReading(title:str, conn_string=conn_string) -> dict:
     
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
@@ -105,7 +104,47 @@ def seeList(conn_string=conn_string):
     conn.close()
     return result
     
+def finishReading(rating:int, title:int, checkoutbook:str, conn_string=conn_string) -> dict:
+    
+    id = -1
+    result = {}
+    titles = []
+    if rating >= 0 and rating <=5:
+        conn = psycopg2.connect(conn_string)
+        cursor = conn.cursor()
+
+        cursor.execute(f"SELECT * FROM reading_list;")
+        for t in cursor:
+            titles.append(t)
+        for book in titles:
+            # print(book)
+            if book[1] == title.lower():
+                id = book[0]
+        if id < 0:
+            result['message'] = f"Livro '{title}' não encontrado"
+            result['result'] = False
+            result['service'] = 4
+            cursor.close()
+            conn.close()
+            return result
+        cursor.execute(f"UPDATE reading_list SET rating = {rating}, checkoutbook = {checkoutbook} WHERE id = {id};")
+        result['message'] = f"Livro '{title}' finalizado com sucesso"
+        result['result'] = True
+        result['service'] = 4
+        print(f"Leitura do livro '{title}' finalizada")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return result
+    else:
+        result['message'] = f"rating precisa ser de 0 a 5"
+        result['result'] = False
+        result['service'] = 4
+        return result
+
+
 
 # title = input('Title (del): ')
 # leaveReading(title=title, conn_string=conn_string)
 # seeList()
+# finishReading(rating=2, title='matar')
