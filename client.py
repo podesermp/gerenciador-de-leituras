@@ -1,22 +1,35 @@
+from http import client
 from socket import *
+from urllib import request
 from library.serialização.serializador import deserializer, serializer
-from library.user.user import userDefineSevice, userShowMessage
+from library.user.user import userDefineService, userShowMessage
 
 
 serverName = 'localhost'
 serverPort = 12000
+
+def send(client:socket):
+    try:
+        message = userDefineService()
+        message_json = serializer(message=message)
+        client.sendto(message_json.encode(), (serverName, serverPort))
+    except ValueError as erro:
+        print("\nErro: o valor inserido é inválido")
+    except Exception as erro:
+        print(f"\nErro: {erro}")
+
+def receive(client:socket):
+    try:
+        answerMessage, serverAddress = client.recvfrom(2048)
+        response = deserializer(message=answerMessage)
+        userShowMessage(message=response)
+    except Exception as erro:
+        print(f"Erro: {erro}")
+
+def close(client:socket):
+    client.close()
+
 clientSocket = socket(AF_INET, SOCK_DGRAM)
-
-# book = Book(title='o milagre da manhã', author='Juliana', pages=200)
-message = userDefineSevice()
-
-message_json = serializer(message=message)
-
-clientSocket.sendto(message_json.encode(), (serverName, serverPort))
-answerMessage, serverAddress = clientSocket.recvfrom(2048)
-response = deserializer(message=answerMessage)
-
-userShowMessage(message=response)
-# print(f"\n{response}")
-
-clientSocket.close()
+clientSocket.settimeout(2)
+send(client=clientSocket)
+receive(client=clientSocket)

@@ -13,23 +13,24 @@ conn_string = 'host={0} user={1} dbname={2} password={3} sslmode={4}'.format(hos
 
 # conecta o banco e cria a tabela
 def connectBD(conn_string=conn_string):
+    try:
+        conn = psycopg2.connect(conn_string)
+        # print('conectado')
 
-    conn = psycopg2.connect(conn_string)
-    print('conectado')
+        #com o cursor consigo executar SQL
+        cursor = conn.cursor()
 
-    #com o cursor consigo executar SQL
-    cursor = conn.cursor()
+        # criar tabelas
+        cursor.execute("CREATE TABLE IF NOT EXISTS reading_list(id serial PRIMARY KEY, title VARCHAR(50) NOT NULL, author VARCHAR(50) NOT NULL, checkinBook VARCHAR(50) NOT NULL, checkoutBook VARCHAR(50), pages INTEGER NOT NULL, rating INTEGER);")
 
-    # criar tabelas
-    cursor.execute("CREATE TABLE reading_list(id serial PRIMARY KEY, title VARCHAR(50) NOT NULL, author VARCHAR(50) NOT NULL, checkinBook VARCHAR(50) NOT NULL, checkoutBook VARCHAR(50), pages INTEGER NOT NULL, rating INTEGER);")
-    cursor.execute("CREATE TABLE wishlist (id serial PRIMARY KEY, title VARCHAR(50), author VARCHAR(50), pages INTEGER);")
+        print("tabela 'reading_list' criadas")
 
-    print("tabela 'reading_list' e 'wishlist' criadas")
-
-    #para commitar a alteração
-    conn.commit()
-    cursor.close()
-    conn.close()
+        #para commitar a alteração
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as erro:
+        print(f"ERRO: {erro}")
 
 # adiciona um livro na lista de leitura
 # essa função corresponde a addNewReading(book:Book, list: int): boolean
@@ -39,7 +40,7 @@ def addBook(title:str, author:str, pages:int, checkinBook:str, conn_string=conn_
     try:
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
-
+        
         cursor.execute(f"INSERT INTO reading_list (title, author, pages, checkinBook) VALUES ('{title.lower()}', '{author.lower()}', {pages}, {checkinBook})")
         print(f"Livro '{title}' adicionado a lista de leitura")
         result['result'] = True
@@ -103,8 +104,8 @@ def seeList(conn_string=conn_string):
     cursor.close()
     conn.close()
     return result
-    
-def finishReading(rating:int, title:int, checkoutbook:str, conn_string=conn_string) -> dict:
+
+def finishReading(rating:int, title:str, checkoutbook:str, conn_string=conn_string) -> dict:
     
     id = -1
     result = {}
@@ -142,9 +143,4 @@ def finishReading(rating:int, title:int, checkoutbook:str, conn_string=conn_stri
         result['service'] = 4
         return result
 
-
-
-# title = input('Title (del): ')
-# leaveReading(title=title, conn_string=conn_string)
-# seeList()
-# finishReading(rating=2, title='matar')
+connectBD()

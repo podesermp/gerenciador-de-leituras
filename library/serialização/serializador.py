@@ -1,7 +1,13 @@
 import json as js
 
 def serializer(message):
-    return js.dumps(message)
+    try:
+        return js.dumps(message)
+    except Exception as erro:
+        print(f"erro: {erro}")
 
 def deserializer(message):
-    return js.loads(message)
+    try:
+        return js.loads(message)
+    except Exception as erro:
+        print(f"erro: {erro}")
