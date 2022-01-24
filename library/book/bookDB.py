@@ -1,4 +1,3 @@
-from datetime import datetime
 import psycopg2
 
 #config
@@ -15,7 +14,6 @@ conn_string = 'host={0} user={1} dbname={2} password={3} sslmode={4}'.format(hos
 def connectBD(conn_string=conn_string):
     try:
         conn = psycopg2.connect(conn_string)
-        # print('conectado')
 
         #com o cursor consigo executar SQL
         cursor = conn.cursor()
@@ -33,7 +31,6 @@ def connectBD(conn_string=conn_string):
         print(f"ERRO: {erro}")
 
 # adiciona um livro na lista de leitura
-# essa função corresponde a addNewReading(book:Book, list: int): boolean
 def addBook(title:str, author:str, pages:int, checkinBook:str, conn_string=conn_string) -> dict:
     
     result  = {}
@@ -105,6 +102,7 @@ def seeList(conn_string=conn_string):
     conn.close()
     return result
 
+# finaliza um livro que esta na lista de leituras
 def finishReading(rating:int, title:str, checkoutbook:str, conn_string=conn_string) -> dict:
     
     id = -1

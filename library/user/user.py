@@ -1,9 +1,7 @@
 from datetime import datetime
 
-# mostra a mensagem para o usuário de acordo com o serviço que
-# foi solicitado ao servidor
+# mostra a mensagem para o usuário de acordo com o serviço que foi solicitado ao servidor
 def userShowMessage(message: dict):
-
     if message['service'] == 1:
         print('\n------------*---------------')
         print(message['message'])
@@ -29,9 +27,9 @@ def userShowMessage(message: dict):
     else:
         print('\n------------*---------------')
         print(message['message'])
-# interage com o usuário para coletar as informações necessárias
-# para adicionar um livro na lista de leituras
 
+'''interage com o usuário para coletar as informações necessárias
+para adicionar um livro na lista de leituras'''
 def userAddReading() -> dict:
     message = {}
     message['title'] = input("Título: ")
@@ -43,12 +41,13 @@ def userAddReading() -> dict:
 
     return message
 
-# interage com o usuário para coletar as informações necessárias
-# para abandonar um livro da lista de leituras (abandonar leitura)
+'''interage com o usuário para coletar as informações necessárias
+para abandonar um livro da lista de leituras (abandonar leitura)'''
 def userLeaveReading() -> str:
     title = input('Título: ')
     return title
 
+# interage com o usuário para coletar as informações necessárias para finalizar uma leitura
 def userFinishReading() -> dict:
     message = {}
     message['title'] = input('Título: ')

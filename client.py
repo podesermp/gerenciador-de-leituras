@@ -1,6 +1,4 @@
-from http import client
 from socket import *
-from urllib import request
 from library.serialização.serializador import deserializer, serializer
 from library.user.user import userDefineService, userShowMessage
 
