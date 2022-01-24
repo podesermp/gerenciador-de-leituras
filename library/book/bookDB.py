@@ -116,7 +116,6 @@ def finishReading(rating:int, title:str, checkoutbook:str, conn_string=conn_stri
         for t in cursor:
             titles.append(t)
         for book in titles:
-            # print(book)
             if book[1] == title.lower():
                 id = book[0]
         if id < 0:
