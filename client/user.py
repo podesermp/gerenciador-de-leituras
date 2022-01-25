@@ -1,4 +1,5 @@
 from datetime import datetime
+import client.proxy as proxy
 
 # mostra a mensagem para o usuário de acordo com o serviço que foi solicitado ao servidor
 def userShowMessage(message: dict):
@@ -28,36 +29,9 @@ def userShowMessage(message: dict):
         print('\n------------*---------------')
         print(message['message'])
 
-'''interage com o usuário para coletar as informações necessárias
-para adicionar um livro na lista de leituras'''
-def userAddReading() -> dict:
-    message = {}
-    message['title'] = input("Título: ")
-    message['author'] = input("Autor: ")
-    message['pages'] = input("Total de páginas: ")
-    message['checkinBook'] = datetime.today().strftime('%d-%m-%Y').replace('-', '') # para obter a data atual
-    message['checkoutBook'] = ""
-    message['rating'] = ""
-
-    return message
-
-'''interage com o usuário para coletar as informações necessárias
-para abandonar um livro da lista de leituras (abandonar leitura)'''
-def userLeaveReading() -> str:
-    title = input('Título: ')
-    return title
-
-# interage com o usuário para coletar as informações necessárias para finalizar uma leitura
-def userFinishReading() -> dict:
-    message = {}
-    message['title'] = input('Título: ')
-    message['rating'] = int(input('Avaliação do livro (0-5): '))
-    message['checkoutBook'] = datetime.today().strftime('%d-%m-%Y').replace('-', '') # para obter a data atual
-    return message
-
 # menu de serviços
-def userDefineService() -> dict:
-    answer = {}
+def userDefineService():
+    result = {}
 
     print('[1] - Adicionar nova leitura')
     print('[2] - Abandonar leitura')
@@ -69,20 +43,46 @@ def userDefineService() -> dict:
     if service == 1:
         print('\n------------*---------------')
         print('[1] - Adicionar nova leitura\n')
-        answer['objeto'] = userAddReading()
+        title = input("Título: ")
+        author = input("Autor: ")
+        pages = input("Total de páginas: ")
+        checkinBook = datetime.today().strftime('%d-%m-%Y').replace('-', '') # para obter a data atual
+        checkoutBook = ""
+        rating = ""
+        result = proxy.addBook(
+            title=title, 
+            author=author, 
+            pages=pages, 
+            checkinBook=checkinBook,
+            checkoutBook=checkoutBook,
+            rating=rating
+        )
+        return result
     elif service == 2:
         print('\n------------*---------------')
         print('[2] - Abandonar leitura\n')
-        answer['title'] = userLeaveReading()
+        title = input('Título: ')
+        result = proxy.leaveReading(title=title)
+        return result
     elif service == 3:
         print('\n------------*---------------')
         print('[3] - Ver lista de leitura\n')
+        result['service'] = 3
+        return result
     elif service == 4:
         print('\n------------*---------------')
         print('[4] - Finalizar livro\n')
-        answer['objeto'] = userFinishReading()
+        title = input('Título: ')
+        rating = int(input('Avaliação do livro (0-5): '))
+        checkoutBook = datetime.today().strftime('%d-%m-%Y').replace('-', '') # para obter a data atual
+        result = proxy.finishReading(
+            rating=rating, 
+            title=title, 
+            checkoutbook=checkoutBook
+        )
+        return result
     else:
         print('Opção inválida!\n')
         service = 0
-    answer['service'] = service
-    return answer
+    result['service'] = service
+    return result

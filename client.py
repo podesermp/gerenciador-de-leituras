@@ -1,6 +1,6 @@
 from socket import *
-from library.serialização.serializador import deserializer, serializer
-from library.user.user import userDefineService, userShowMessage
+from serializador.serializador import deserializer, serializer
+from client.user import userDefineService, userShowMessage
 
 
 serverName = 'localhost'
