@@ -1,5 +1,5 @@
 # Gerenciador de leituras
-O abjetivo da atividade era desenvolver serviços cliente-servidor UDP nos padrões RMI.
+Implementar um Serviço Remoto seguindo a arquitetura cliente/servidor e o modelo de protocolo requisição/resposta. O acesso às operações do serviço deve ser implementado como uma chamada remota a métodos (transparente).
 
 ## Aplicação
 A aplicação foi desenvolvida por Elias Frota, Dheymison Nunes e Marcos Paulo. <br>
